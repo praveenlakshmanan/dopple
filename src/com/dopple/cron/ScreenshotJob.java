@@ -16,8 +16,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 
+import com.dopple.action.AppConstants;
 import com.dopple.mail.EmailUtility;
-import com.dopple.service.AppConstants;
 /**
  * To take a screen shot and store in to some location
  * @author hduser

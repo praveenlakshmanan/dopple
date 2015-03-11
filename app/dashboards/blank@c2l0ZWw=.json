@@ -1,5 +1,5 @@
 {
-  "title": "{{ARGS.title || 'Dashboard'}}",
+  "title": "New Dashboard",
   "services": {
     "query": {
       "list": {
@@ -26,7 +26,7 @@
   "index": {
     "interval": "none",
     "pattern": "[logstash-]YYYY.MM.DD",
-    "default": "{{ARGS.index}}",
+    "default": "doppleml-row*",
     "warm_fields": false
   }
 }

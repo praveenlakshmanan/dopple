@@ -22,7 +22,7 @@ import javax.mail.internet.MimeMultipart;
 
 import org.apache.log4j.Logger;
 
-import com.dopple.service.AppConstants;
+import com.dopple.action.AppConstants;
 
 /**
  * A utility class for sending e-mail

@@ -10,7 +10,7 @@
  
   <property name="docs.dir" location="docs" />
   <property name="deploy.dir" location="/usr/lib/tomcat7/webapps"></property>
-  <property name="file.name" value="${dist}/doppleMLStage.war" />
+  <property name="file.name" value="${dist}/doppleMLAnalysis.war" />
  
   <property name="webcontent.dir" location="WebContent"/>
    <property name="lib.dir" location="${webcontent.dir}/WEB-INF/lib"/>

@@ -29,8 +29,8 @@ function (Settings) {
      *  +elasticsearch: {server: "http://localhost:9200", withCredentials: true}+
      *
      */
-    elasticsearch: "http://ec2-54-227-252-109.compute-1.amazonaws.com:9200",
-
+     elasticsearch: "http://ec2-54-227-252-109.compute-1.amazonaws.com:9200",
+	  //elasticsearch: "http://localhost:9200",
     /** @scratch /configuration/config.js/5
      *
      * ==== default_route
@@ -41,7 +41,7 @@ function (Settings) {
      *
      * default_route: '/dashboard/elasticsearch/WebLogs',
      */
-    default_route     : '/dashboard/file/ApacheLogAnalysis.json',
+    default_route     : '',
 
     /** @scratch /configuration/config.js/5
      *

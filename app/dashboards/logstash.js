@@ -28,6 +28,7 @@ var dashboard, queries, _d_timespan;
 // All url parameters are available via the ARGS object
 var ARGS;
 
+
 // Set a default timespan if one isn't specified
 _d_timespan = '1d';
 
@@ -38,13 +39,14 @@ dashboard = {
 };
 
 // Set a title
-dashboard.title = 'Logstash Search';
+dashboard.title = ARGS.title;
 
 // Allow the user to set the index, if they dont, fall back to logstash.
 if(!_.isUndefined(ARGS.index)) {
   dashboard.index = {
     default: ARGS.index,
-    interval: 'none'
+    interval: 'none',
+    pattern:  '[logstash-]YYYY.MM.DD',
   };
 } else {
   // Don't fail to default
@@ -60,15 +62,7 @@ if(!_.isUndefined(ARGS.index)) {
 // Or they can specify a split character using the split aparameter
 // If query is defined, split it into a list of query objects
 // NOTE: ids must be integers, hence the parseInt()s
-if(!_.isUndefined(ARGS.query)) {
-  queries = _.object(_.map(ARGS.query.split(ARGS.split||','), function(v,k) {
-    return [k,{
-      query: v,
-      id: parseInt(k,10),
-      alias: v
-    }];
-  }));
-} else {
+
   // No queries passed? Initialize a single query to match everything
   queries = {
     0: {
@@ -76,63 +70,9 @@ if(!_.isUndefined(ARGS.query)) {
       id: 0,
     }
   };
-}
 
-// Now populate the query service with our objects
-dashboard.services.query = {
-  list : queries,
-  ids : _.map(_.keys(queries),function(v){return parseInt(v,10);})
-};
 
-// Lets also add a default time filter, the value of which can be specified by the user
-dashboard.services.filter = {
-  list: {
-    0: {
-      from: "now-"+(ARGS.from||_d_timespan),
-      to: "now",
-      field: ARGS.timefield||"@timestamp",
-      type: "time",
-      active: true,
-      id: 0,
-    }
-  },
-  ids: [0]
-};
 
-// Ok, lets make some rows. The Filters row is collapsed by default
-dashboard.rows = [
-  {
-    title: "Chart",
-    height: "300px"
-  },
-  {
-    title: "Events",
-    height: "400px"
-  }
-];
-
-// And a histogram that allows the user to specify the interval and time field
-dashboard.rows[0].panels = [
-  {
-    title: 'events over time',
-    type: 'histogram',
-    time_field: ARGS.timefield||"@timestamp",
-    auto_int: true,
-    span: 12
-  }
-];
-
-// And a table row where you can specify field and sort order
-dashboard.rows[1].panels = [
-  {
-    title: 'all events',
-    type: 'table',
-    fields: !_.isUndefined(ARGS.fields) ? ARGS.fields.split(',') : [],
-    sort: !_.isUndefined(ARGS.sort) ? ARGS.sort.split(',') : [ARGS.timefield||'@timestamp','desc'],
-    overflow: 'expand',
-    span: 12
-  }
-];
 
 // Now return the object and we're good!
 return dashboard;
