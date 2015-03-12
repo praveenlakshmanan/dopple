@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<project name="Ant-Test" default="main" basedir=".">
+  <!--location should be changed asper our project name and path00  -->
+  <!-- names are like variable-->
+   <property environment='env'/>  
+  <property name="basedir" location="." />
+ <property name="src" location="src" />
+  <property name="dist" location="dist" />
+  
+ 
+  <property name="docs.dir" location="docs" />
+  <property name="deploy.dir" location="/usr/lib/tomcat7/webapps"></property>
+  <property name="file.name" value="${dist}/doppleMLStage.war" />
+ 
+  <property name="webcontent.dir" location="WebContent"/>
+   <property name="lib.dir" location="${webcontent.dir}/WEB-INF/lib"/>
+  
+  <property name="build.dir" location="${webcontent.dir}/WEB-INF/classes" />
+   <property name='tomcat.lib' value='/usr/lib/tomcat7/lib' />  
+  
+ <!-- Deletes the existing build, docs and dist directory-->
+  <target name="clean">
+  	<echo>deleting existing folder</echo>
+    <delete dir="${build.dir}" />
+    <delete dir="${docs.dir}" />
+      <delete dir="${dist}" />
+    
+  </target>
+ 
+ <!-- Creates the  bin, docs and dist directory-->
+  <target name="makedir">
+  	<echo>making a Directory</echo>
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${docs.dir}" />
+    <mkdir dir="${dist}" />
+   
+  </target>
+ 
+  <!-- Setting classpath -->
+    <path id="compile.classpath">
+        <pathelement location="${build.dir}"/>
+          <fileset dir="${build.dir}">
+             <include name='*.*'/>
+           </fileset>
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
+            
+         </fileset>
+           <fileset dir="${tomcat.lib}" includes='*.jar'/>  
+     <!--    <fileset dir='${conf}'>
+       		<include name='**/*.xml'/>
+    	</fileset>   -->
+    	 
+    </path>
+    
+ <!-- Compiles the java code -->
+ 
+  <target name="compile" depends="clean, makedir">
+      <echo>Compiling...</echo>
+    <javac srcdir="${src}" destdir="${build.dir}">
+          <classpath refid="compile.classpath"/>
+            
+       
+    </javac>
+    
+  	<!--
+     <copy file="${src}/log4j.properties" tofile="${webcontent.dir}/WEB-INF/classes/log4j.properties"/>  
+      <copy file="${src}/app.properties" tofile="${webcontent.dir}/WEB-INF/classes/app.properties"/> 
+      <copy file="${src}/quartz.properties" tofile="${webcontent.dir}/WEB-INF/classes/quartz.properties"/>
+      
+      -->
+  	 <copy file="${src}/user.json" tofile="${webcontent.dir}/WEB-INF/classes/user.json"/>
+    </target>
+	
+ <!--Create War file it includes (html,css,jsp,js,.jar.Class) files -->
+  <target name="war">
+      
+     <war destfile="${file.name}" webxml="${webcontent.dir}/WEB-INF/web.xml">
+         <classes dir="${build.dir}" /> 
+        
+         <lib dir="${lib.dir}">
+      	     <include name="**/*.jar"/>
+         </lib>
+         
+        <fileset dir="${basedir}">
+             
+        </fileset>
+     	
+      <!--   <fileset dir="${webcontent.dir}">
+    	         <include name="**/*.*"/>
+        	  </fileset> -->
+     	  <!-- 	<fileset dir="${webcontent.dir}/WEB-INF">
+          <include name="**/*.*"/>
+            <include name="**/*.html"/>
+            <include name="**/*.css"/>
+            <include name="**/*.jsp"/>
+            <include name="**/*.js"/> 
+        </fileset>  -->
+        
+     	 
+   </war>
+  
+     	<!-- Copy file to Apache Tomcat Webapps Folder --> 
+     <echo>Copying ${file.name}...</echo>
+     <copy file="${file.name}" todir="${deploy.dir}" />
+    	<!--Delete copy file-->
+    <delete file="${file.name}" />
+     <echo>War file is Created</echo>
+    </target>
+ 
+
+  <target name="main" depends="compile,war">
+    <description>Main target</description>
+  </target>
+
+</project> 
