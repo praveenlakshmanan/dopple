@@ -1,0 +1,4 @@
+site code;location_name;city name;latitude;longitude
+ROW;Site T;Toronto;40.4642;-80.6009
+L;Site L;Los Angeles;34.0522;-118.2436
+S;Site S;San Francisco;37.7749;-122.4194

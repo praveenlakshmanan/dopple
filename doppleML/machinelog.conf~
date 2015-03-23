@@ -1,0 +1,45 @@
+input {
+   file {
+    path => ["/home/hduser/elasticsearch/logstashlogs/machinelogs/**/*.log"]
+    start_position => beginning
+
+  }
+
+}
+
+filter {
+  grok { match => [ "message", "%{TIME:time}\|%{WORD:Message_type}\|%{GREEDYDATA:Component}\|%{NUMBER:line_number}\| %{GREEDYDATA:log_message}"] 
+	 match => [ "path" , "%{GREEDYDATA}/%{GREEDYDATA:_location}/%{GREEDYDATA:_machine}.log"]
+	
+      	 break_on_match => false
+}
+#To check location is S or L
+  if [_location] == "S"  or [_location] == "L" {
+ ruby {   
+        code => " temp = event['_machine'].split('_')
+	          if  !temp.nil? || !temp.empty?
+		  event['_machine'] = temp[0]
+  	    end"
+   } 
+ }
+#to get all site details
+sitelocator{sitename => "_location" }
+
+ date {
+    match => ["timestamp" , "dd/MMM/yyyy:HH:mm:ss Z" ]
+  }
+
+}
+
+output {
+stdout { codec => rubydebug }
+elasticsearch{
+        embedded => false
+        host => "localhost"
+        port => "9300"
+        cluster=>"elkcluster"
+	
+     }
+
+}
+
